@@ -25,7 +25,6 @@ async function run() {
             const page = req.query.page;
             const size = parseInt(req.query.size);
             const cursor = productsCollection.find({});
-
             const count = await cursor.count();
 
             let products;
@@ -39,7 +38,16 @@ async function run() {
                 count,
                 products
             });
+        })
 
+        // get data by product keys
+        app.post('/products/byeKeys', async (req, res) => {
+            const keys = req.body;
+            const query = {
+                key: { $in: keys }
+            }
+            const products = await productsCollection.find(query).toArray();
+            res.json(products);
         })
     }
     finally {
