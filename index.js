@@ -20,6 +20,7 @@ async function run() {
 
         const database = client.db('online_shop');
         const productsCollection = database.collection('products');
+        const ordersCollection = database.collection('orders');
 
         app.get('/products', async (req, res) => {
             const page = req.query.page;
@@ -48,6 +49,13 @@ async function run() {
             }
             const products = await productsCollection.find(query).toArray();
             res.json(products);
+        })
+
+        // get order data
+        app.post('/orders', async (req, res) => {
+            const order = req.body;
+            const result = await ordersCollection.insertOne(order);
+            res.json(result)
         })
     }
     finally {
